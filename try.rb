@@ -80,6 +80,7 @@ class SudokuSolver
 
       @rows = @row
       @size = @rows.count
+      puts "size #{@size}"
       @sub_size = Math.sqrt(@size)
     end
 
@@ -146,8 +147,8 @@ class SudokuSolver
         output += row.collect { |column| column.to_s }.join('') #+ "\n"
       end
       puts "size #{output.size}"
-      8.times do |row|
-        8.times do |col|
+      9.times do |row|
+        9.times do |col|
           print output[row*9+col]
         end
         puts ''
@@ -207,9 +208,9 @@ end
 
 sudoku = SudokuSolver.new
 # #sudoku.grid.convert_to_grid('0010020030000001')
-sudoku.grid.convert_to_grid('027600004000700005030000008096400000000050000000003210900000070400001000100002890')
+#sudoku.grid.convert_to_grid('027600004000700005030000008096400000000050000000003210900000070400001000100002890')
 
-# sudoku.grid.convert_to_grid('530070000600195000098000060800060003400803001700020006060000280000419005000080079')
+sudoku.grid.convert_to_grid('530070000600195000098000060800060003400803001700020006060000280000419005000080079')
  
 sudoku.solve_brute_force
 puts sudoku.grid.to_s
