@@ -1,0 +1,141 @@
+<li>I need a big grid with input boxes</li>
+<li>I need to get those input boxes named with a good convention</li>
+
+<li>I need those input boxes to all get submitted as an array when the button is clicked</li>
+
+<li>I need the ajax response to solve the puzzle, or I need an alert message that says "NO SOLUTION!  WTF"</li>
+
+<style>
+	input{
+		width: 16px;
+	}
+	td span{
+		background: green;
+		width:16px;
+		position:relative;
+	}
+	#spacer{
+		background: black;
+	}
+</style>
+
+<form>
+	<table id="grid">
+	</table>
+	
+	<input type="button" value="SOLVE!" style="width:190px;" onclick="submitaroony()"></input>
+</form>
+
+
+
+<script type="text/javascript" src="/javascripts/jquery-1.6.2.min.js"></script>
+
+<span id="time"></span>
+
+<script>
+jQuery.ajaxSetup({ 
+  async: false    // makes it so it waits after sending the post request, aka plain old JAX
+})
+
+
+// This handy function generates the HTML code for the input table
+// the dimensions could be changed, but don't change them because I'm using alpha characters that only
+// increment up to 'j'
+function createGrid(dimension){
+	dimension = 9;
+	
+	// Make the <tr> enclosing 9 times
+	for (var alpha = "a"; alpha != 'j'; alpha = incrementLetter(alpha))
+	{
+		
+		htmlCode = "<tr>\n";
+		for (var numeric = 0; numeric < dimension; numeric++)
+		{
+			htmlCode += '\t<td><input id="' + alpha + numeric + '" type="text" value="" maxlength=1> </input></td>\n';
+			
+			if (numeric % 3 == 2 && numeric != dimension - 1)
+				htmlCode += '\t<td id="spacer"></td>\n\n';
+		}
+		htmlCode += "</tr>\n"
+		
+		if (alpha == 'c' || alpha == 'f')
+			htmlCode += '<tr>\n \t<td colspan="11"><hr/></td>\n</tr>';
+			
+		$('#grid').append(htmlCode);
+	}
+}
+
+createGrid(9);
+populateGrid('5,3, , ,7, , , , ,6, , ,1,9,5, , , , ,9,8, , , , ,6, ,8, , , ,6, , , ,3,4, , ,8, ,3, , ,1,7, , , ,2, , , ,6, ,6, , , , ,2,8, , , , ,4,1,9, , ,5, , , , ,8, , ,7,9');
+
+var glob;
+function submitaroony(){
+	var submission = "";
+	
+	for (var a = "a"; a != 'j'; a = incrementLetter(a))
+	{
+		for (var i = 0; i < 9; i = i + 1)
+		{
+			var val = $('#' + a + i).attr('value');
+			submission += val;
+			
+			if (i != 8)
+				submission += ",";
+			else
+				submission += 'n';
+		}
+	}
+	
+	//submission += ';';
+	
+	glob = $.parseJSON($.post('solvers.js', { solver: {param: submission}}, null, "text").responseText);
+	
+	if (glob.grid == "none")
+	{
+		$('#time').html("This Puzzle Is Erroneous And Cannot Be Solved");
+	}
+	else
+	{
+		populateGrid(glob.grid);
+		$('#time').html("Brute Forced in " + glob.time + " seconds!");
+	}
+}
+
+function populateGrid(grid){
+	grid = grid.replace(/,/g, '');
+	var slot = 0;
+	
+	for (var a = "a"; a != 'j'; a = incrementLetter(a))
+	{
+		for (var i = 0; i < 9; i = i + 1)
+		{
+			if (grid[slot] == ' ') 
+			{
+				slot = slot + 1;
+				continue;
+			}
+			$('#' + a + i).attr('value', grid[slot]);
+			
+			slot = slot + 1;
+		}
+	}
+}
+
+
+
+function incrementLetter(letterToIncrement){
+ var alphaChars = "abcdefghij";
+ //find where the letter is at in the alphaChars string
+ var indexOfLetter = alphaChars.search(letterToIncrement);
+ //if it's not the last letter, then return the next
+ //letter in the string
+ if (indexOfLetter+1 < alphaChars.length) {
+   return(alphaChars.charAt(indexOfLetter+1));
+ }
+ //otherwise return the input letter
+ else{
+   return(letterToIncrement);
+ }
+}
+
+</script>

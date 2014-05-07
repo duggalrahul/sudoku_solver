@@ -1,0 +1,71 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<style>
+	input{
+		width: 16px;
+	}
+	td span{
+		background: green;
+		width:16px;
+		position:relative;
+	}
+	form{
+		width: 144px;
+        height: 160px;
+
+        /*position: absolute;*/
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        margin: auto;
+
+	}
+	#spacer{
+		background: black;
+	}
+</style>
+
+
+
+<form id="myForm" action="/solvers" method='post'>
+
+    <table id="grid">	
+         <% for row in 0..8 %>
+            <tr>
+
+            <% for col in 0..8 %>
+               <td> <%= @solution[row*8+col] %> </td>
+               <% if col==2 or col==5%>
+                  <td id="spacer"></td>
+               <% end %>
+            <% end %>
+
+            <% if row==2 or row==5 %>
+                <tr><td colspan="11"><hr/></td></tr>
+            <% end %>
+            
+            </tr>
+          <% end %>
+	</table>
+
+</form>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

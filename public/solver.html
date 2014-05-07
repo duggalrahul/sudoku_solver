@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<li>Create a 9x9 table</li>
+
+<style>
+	input{
+		width: 16px;
+	}
+	td span{
+		background: green;
+		width:16px;
+		position:relative;
+	}
+	form{
+		width: 144px;
+        height: 160px;
+
+        /*position: absolute*/;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        margin: auto;
+
+	}
+	#spacer{
+		background: black;
+	}
+</style>
+
+
+
+<form id="sudoku">
+	<table id="grid">	
+	</table>
+</form>
+
+
+<script>
+
+
+// This fuction builds the 9x9 grid of html input forms. Each cell is given a unique id.
+function buildTable()
+{
+	var array = "abcdefghi";
+	var html = "";
+
+	for(var r=0; r<9 ; r++)
+	{
+		var row = array[r];
+		html += "<tr>\n";
+
+		for(var col=0; col<9 ; col++)
+		{
+
+	            html += '<td><input id="' + row + col + '" type="text" value="" maxlength=1> </input></td>' +'\n';
+
+	            if(col==2 || col==5)
+	            	html += '<td id="spacer"></td>\n'
+		}
+		html += '</tr>';
+
+		if(row=='c' || row=='f')
+			html += '<tr><td colspan="11"><hr/></td></tr>'
+	}
+
+	document.getElementById("grid").innerHTML = html;
+	
+}
+
+function submit()
+{
+	 var array = "abcdefghi";
+	 var string = "";
+
+	 for(var r=0; r<9 ; r++)
+	 {
+	 	   var row = array[r];
+
+	 	   for(var col=0; col<9; col++)
+	 	   {
+	 	   	      var val = document.getElementById(row+col).value;
+	 	   	      string += val;
+
+	 	   	      if(col<8)
+	 	   	      	  string += ',';
+	 	   	      else
+	 	   	      	  string += 'n';
+	 	   }
+	 }
+	 
+
+	$.ajax({
+    type: 'POST',
+    url: '/solvers',
+    data: '{"name":"jonas"}', // or JSON.stringify ({name: 'jonas'}),
+    success: function(data) { alert('data: ' + data); },
+    contentType: "application/json",
+    dataType: 'json'
+    });
+}
+
+
+buildTable();
+
+
+
+</script>
+
+<input type="button" value="SOLVE!" style="width:190px;" onclick="submit()"></input>
+<input type="button" value="CLEAR" style="width:190px;" onclick="buildTable()"></input>
+
+
+
+</body>
+</html>
+
+
