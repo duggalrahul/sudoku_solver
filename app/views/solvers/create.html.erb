@@ -37,6 +37,7 @@
 <form id="myForm" action="/solvers" method='post'>
 
     <table id="grid">	
+       <% if @solution.length==81 %>
          <% for row in 0..8 %>
             <tr>
 
@@ -53,6 +54,9 @@
             
             </tr>
           <% end %>
+       <% else %>
+         <td><%= @solution %></td>
+       <% end %>
 	</table>
 
 </form>

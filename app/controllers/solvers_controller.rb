@@ -1,4 +1,5 @@
 require 'try'
+require 'timeout'
 class SolversController < ApplicationController
 
 
@@ -55,10 +56,12 @@ class SolversController < ApplicationController
     #@size = @solver.length
     #make a new sudokusolver object
     sudoku = SudokuSolver.new()
-    sudoku.grid.convert_to_grid(@solver.to_s)
-    sudoku.solve_brute_force
-    @solution = sudoku.grid.to_s
     
+    sudoku.grid.convert_to_grid(@solver.to_s)
+    Timeout::timeout(5){sudoku.solve_brute_force 
+      @solution = sudoku.grid.to_s}
+    rescue Timeout::Error
+      @solution = 'Taking too much time' 
   end
 
   # PUT /solvers/1
