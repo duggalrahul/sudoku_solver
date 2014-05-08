@@ -27,15 +27,16 @@
   }
 </style>
 
-<%= javascript_tag 'buildTable()' %>
+
         
 
 <form id="myForm" action="/solvers" method='post'>
 
     <table id="grid"> 
-  </table>
-
     
+    </table>
+
+  <input type="button" value="Reset" onclick="buildTable()"></input>  
   <input type="submit" value="Submit">
 </form>
 
