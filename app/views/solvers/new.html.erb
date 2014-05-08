@@ -1,6 +1,76 @@
-<h1>New solver</h1>
+<body>
 
-<%= render 'form' %>
+<style>
+  input{
+    width: 16px;
+  }
+  td span{
+    background: green;
+    width:16px;
+    position:relative;
+  }
+  form{
+    width: 144px;
+    height: 160px;
 
-<%= link_to 'Back', solvers_path %>
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        margin: auto;
+
+  }
+  #spacer{
+    background: black;
+  }
+</style>
+
+
+
+<form id="myForm" action="/solvers" method='post'>
+
+    <table id="grid"> 
+  </table>
+
+    <input type="button" value="build" onclick="buildTable()"></input>
+  <input type="submit" value="Submit">
+</form>
+
+
+<script>
+
+
+// This fuction builds the 9x9 grid of html input forms. Each cell is given a unique id.
+function buildTable()
+{
+  var array = "abcdefghi";
+  var html = "";
+
+  for(var r=0; r<9 ; r++)
+  {
+    var row = array[r];
+    html += "<tr>\n";
+
+    for(var col=0; col<9 ; col++)
+    {
+
+              html += '<td><input name="solver[' + row + col + ']" type="text" value="0" maxlength=1> </input></td>' +'\n';
+
+              if(col==2 || col==5)
+                html += '<td id="spacer"></td>\n'
+    }
+    html += '</tr>';
+
+    if(row=='c' || row=='f')
+      html += '<tr><td colspan="11"><hr/></td></tr>'
+  }
+
+  document.getElementById("grid").innerHTML = html; 
+}
+
+</script>
+
+</body>
 
