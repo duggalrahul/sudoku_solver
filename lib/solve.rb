@@ -31,26 +31,34 @@ class SudokuSolver
     def initialize()
       @size = 0
       @sub_size = 0
-      @rows = Array.new
+      #@rows = Array.new(4)
     end
 
     def cell_at(cell_index)
       @rows[cell_index / @size.to_i][cell_index % @size.to_i]
     end
 
-    def load_from_file(file_path)
-      File.open(file_path, 'r').each_line do |line|
-        @rows.push(
-            line.split.collect do |value|
-              value = value.to_i
-              if value > 0
-                Cell.new(value, 9, true)
-              else
-                Cell.new(nil, 9)
-              end
-            end
-        )
-      end
+    def convert_to_grid(string_sudoku)
+      
+      @temp = Array.new
+      string_sudoku.each_char do |c|
+          @temp.push(c.to_i)
+        end
+            
+      len = string_sudoku.length
+      sqr = Math.sqrt(len).to_i
+      @row = Array.new(sqr){Array.new}
+
+      @temp.each_with_index do |val,ind|
+          value = val.to_i
+          if value > 0
+              @row[ind/sqr].push(Cell.new(value,9,true))
+          else
+              @row[ind/sqr].push(Cell.new(nil,9))
+          end
+        end
+
+      @rows = @row
       @size = @rows.count
       @sub_size = Math.sqrt(@size)
     end
@@ -115,9 +123,9 @@ class SudokuSolver
     def to_s
       output = ''
       @rows.each do |row|
-        output += row.collect { |column| column.to_s }.join(' ') + "\n"
+        output += row.collect { |column| column.to_s }.join('') #+ "\n"
       end
-      output
+      return output      
     end
 
     # Class represents one cell in sudoku grid
@@ -168,7 +176,9 @@ class SudokuSolver
 
 end
 
+# sudoku = SudokuSolver.new
+# #sudoku.grid.convert_to_grid('0010020030000001')
+# sudoku.grid.convert_to_grid('530070000600195000098000060800060003400803001700020006060000280000419005000080079')
 
-sudoku.grid.load_from_file('sudoku.txt')
-sudoku.solve_brute_force
-puts sudoku.grid.to_s
+# sudoku.solve_brute_force
+# puts sudoku.grid.to_s

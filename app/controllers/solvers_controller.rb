@@ -1,4 +1,4 @@
-require 'try'
+require 'solve'
 require 'timeout'
 class SolversController < ApplicationController
 
